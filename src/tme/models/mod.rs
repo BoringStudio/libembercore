@@ -37,3 +37,38 @@ pub mod polygon_object;
 pub mod polyline_object;
 pub mod rectangle_object;
 pub mod text_object;
+
+pub use chunk::*;
+pub use data_source::*;
+pub use frame::*;
+pub use grid::*;
+pub use layer::*;
+pub use map::*;
+pub use object::Object;
+pub use object_template::*;
+pub use orientation::*;
+pub use point::*;
+pub use property::*;
+pub use terrain::*;
+pub use text::Text;
+pub use tile::*;
+pub use tile_offset::*;
+pub use tileset::*;
+
+pub use hexagonal_map::*;
+pub use isometric_map::*;
+pub use orthogonal_map::*;
+pub use staggered_map::*;
+
+pub use group_layer::*;
+pub use image_layer::*;
+pub use object_group_layer::*;
+pub use tile_layer::*;
+
+pub use ellipse_object::*;
+pub use general_object::*;
+pub use point_object::*;
+pub use polygon_object::*;
+pub use polyline_object::*;
+pub use rectangle_object::*;
+pub use text_object::*;
