@@ -12,5 +12,10 @@ path = "src/lib.rs"
 chrono = "0.4"
 rust_decimal = "1"
 serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1" }
+thiserror = "1.0.20"
 uuid = { version = "0.8", features = ["v4", "serde"] }
 env_logger = "0.7"
+
+[dev-dependencies]
+serde_json = { version = "1", features = ["preserve_order"] }
