@@ -193,4 +193,16 @@ mod tests {
 
         assert_eq!(actual, expected);
     }
+
+    #[test]
+    fn decompress_gzip() {
+        let compression = Compression::Gzip;
+        let base64 = "H4sIAAAAAAAACmNiYGAAAJcXTYsEAAAA".to_string();
+        let data = DataSource::Encoded(base64);
+
+        let actual = data.decode_and_decompress(compression).unwrap();
+        let expected = vec![2];
+
+        assert_eq!(actual, expected);
+    }
 }
