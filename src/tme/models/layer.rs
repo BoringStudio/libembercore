@@ -25,6 +25,7 @@ pub enum Layer {
 #[derive(Debug, PartialEq, Eq, Copy, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Compression {
+    Zstd,
     Zlib,
     Gzip,
 }
@@ -34,6 +35,7 @@ impl FromStr for Compression {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
+            "zstd" => Ok(Compression::Zstd),
             "zlib" => Ok(Compression::Zlib),
             "gzip" => Ok(Compression::Gzip),
             _ => Error::ParseCompression(s.to_owned()).fail(),

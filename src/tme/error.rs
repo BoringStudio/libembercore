@@ -24,6 +24,14 @@ pub enum Error {
     ParseLayerType(String),
     #[error("Unable parse data from string: {0}")]
     ParseDataSource(String),
+    #[error("Invalid data source format: {0}")]
+    InvalidDataSourceFormat(String),
+    #[error("Unable convert slice of u8 to primitive type, because: {0}")]
+    ConvertU8SliceToPrimitive(String),
+    #[error(transparent)]
+    DecodeBase64(#[from] base64::DecodeError),
+    #[error(transparent)]
+    CommonIoError(#[from] std::io::Error),
 }
 
 impl Error {
