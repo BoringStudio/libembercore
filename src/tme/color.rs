@@ -31,6 +31,42 @@ impl Color {
     pub fn with_alpha(a: u8, r: u8, g: u8, b: u8) -> Self {
         Self { a, r, g, b }
     }
+
+    pub fn new_black() -> Self {
+        Self {
+            a: 255,
+            r: 0,
+            g: 0,
+            b: 0,
+        }
+    }
+
+    pub fn new_red() -> Self {
+        Self {
+            a: 255,
+            r: 255,
+            g: 0,
+            b: 0,
+        }
+    }
+
+    pub fn new_green() -> Self {
+        Self {
+            a: 255,
+            r: 0,
+            g: 255,
+            b: 0,
+        }
+    }
+
+    pub fn new_blue() -> Self {
+        Self {
+            a: 255,
+            r: 0,
+            g: 0,
+            b: 255,
+        }
+    }
 }
 
 impl FromStr for Color {

@@ -7,23 +7,34 @@ use crate::tme::color::Color;
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub struct Text {
+    #[serde(default = "default_false")]
     pub bold:        bool,
     #[serde(with = "color_serde")]
+    #[serde(default = "Color::new_black")]
     pub color:       Color,
     #[serde(rename = "fontfamily")]
+    #[serde(default = "default_font_family")]
     pub font_family: String,
     #[serde(rename = "halign")]
+    #[serde(default = "HorizontalAlign::default")]
     pub h_align:     HorizontalAlign,
+    #[serde(default = "default_false")]
     pub italic:      bool,
+    #[serde(default = "default_true")]
     pub kerning:     bool,
     #[serde(rename = "pixelsize")]
-    pub pixel_size:  i64,
+    #[serde(default = "default_pixel_size")]
+    pub pixel_size:  i32,
     #[serde(rename = "strikeout")]
+    #[serde(default = "default_false")]
     pub strike_out:  bool,
     pub text:        String,
+    #[serde(default = "default_false")]
     pub underline:   bool,
     #[serde(rename = "valign")]
+    #[serde(default = "VerticalAlign::default")]
     pub v_align:     VerticalAlign,
+    #[serde(default = "default_false")]
     pub wrap:        bool,
 }
 
@@ -36,12 +47,40 @@ pub enum HorizontalAlign {
     Left,
 }
 
+impl Default for HorizontalAlign {
+    fn default() -> Self {
+        HorizontalAlign::Left
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize, Copy, Clone, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
 pub enum VerticalAlign {
     Center,
     Bottom,
     Top,
+}
+
+impl Default for VerticalAlign {
+    fn default() -> Self {
+        VerticalAlign::Top
+    }
+}
+
+fn default_font_family() -> String {
+    "sans-serif".to_owned()
+}
+
+fn default_pixel_size() -> i32 {
+    16
+}
+
+fn default_true() -> bool {
+    true
+}
+
+fn default_false() -> bool {
+    false
 }
 
 #[cfg(test)]
@@ -109,6 +148,9 @@ mod tests {
                     "underline":  true,
                     "valign":     "top",
                     "wrap":       true
+                },
+                {
+                    "text":       "somebody"
                 }
             ]
         })
@@ -170,6 +212,20 @@ mod tests {
                 underline:   true,
                 v_align:     VerticalAlign::Top,
                 wrap:        true,
+            },
+            Text {
+                bold:        default_false(),
+                color:       Color::new_black(),
+                font_family: default_font_family(),
+                h_align:     HorizontalAlign::default(),
+                italic:      default_false(),
+                kerning:     default_true(),
+                pixel_size:  default_pixel_size(),
+                strike_out:  default_false(),
+                text:        "somebody".to_string(),
+                underline:   default_false(),
+                v_align:     VerticalAlign::default(),
+                wrap:        default_false(),
             },
         ];
 
@@ -245,6 +301,22 @@ mod tests {
                     "wrap":       true
                 }
             },
+            json! {
+                {
+                    "bold":       false,
+                    "color":      "#FF000000",
+                    "fontfamily": "sans-serif",
+                    "halign":     "left",
+                    "italic":     false,
+                    "kerning":    true,
+                    "pixelsize":  16,
+                    "strikeout":  false,
+                    "text":       "somebody",
+                    "underline":  false,
+                    "valign":     "top",
+                    "wrap":       false
+                }
+            },
         ]
         .into_iter()
         .map(|v| serde_json::to_string(&v).unwrap())
@@ -306,6 +378,20 @@ mod tests {
                 underline:   true,
                 v_align:     VerticalAlign::Top,
                 wrap:        true,
+            },
+            Text {
+                bold:        default_false(),
+                color:       Color::new_black(),
+                font_family: default_font_family(),
+                h_align:     HorizontalAlign::default(),
+                italic:      default_false(),
+                kerning:     default_true(),
+                pixel_size:  default_pixel_size(),
+                strike_out:  default_false(),
+                text:        "somebody".to_string(),
+                underline:   default_false(),
+                v_align:     VerticalAlign::default(),
+                wrap:        default_false(),
             },
         ]
         .into_iter()
