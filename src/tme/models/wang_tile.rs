@@ -9,7 +9,7 @@ pub struct WangTile {
     #[serde(rename = "hflip")]
     pub h_flip:  bool,
     #[serde(rename = "tileid")]
-    pub tile_id: i64,
+    pub tile_id: i32,
     #[serde(rename = "vflip")]
     pub v_flip:  bool,
     #[serde(rename = "wangid")]

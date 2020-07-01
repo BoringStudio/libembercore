@@ -29,38 +29,38 @@ pub struct Tileset {
     #[serde(default = "utils::make_none_option")]
     pub background_color:  Option<Color>,
     #[serde(default = "utils::make_none_option")]
-    pub columns:           Option<i64>,
+    pub columns:           Option<i32>,
     #[serde(default = "utils::make_none_option")]
     pub grid:              Option<Grid>,
     #[serde(default = "utils::make_none_option")]
     pub image:             Option<String>,
     #[serde(rename = "imageheight")]
     #[serde(default = "utils::make_none_option")]
-    pub image_height:      Option<i64>,
+    pub image_height:      Option<i32>,
     #[serde(rename = "imagewidth")]
     #[serde(default = "utils::make_none_option")]
-    pub image_width:       Option<i64>,
+    pub image_width:       Option<i32>,
     #[serde(default = "utils::make_none_option")]
-    pub margin:            Option<i64>,
+    pub margin:            Option<i32>,
     pub name:              String,
     #[serde(default = "utils::make_none_option")]
     pub properties:        Option<Vec<Property>>,
-    pub spacing:           i64,
+    pub spacing:           i32,
     #[serde(default = "utils::make_none_option")]
     pub terrains:          Option<Vec<Terrain>>,
     #[serde(rename = "tilecount")]
-    pub tile_count:        i64,
+    pub tile_count:        usize,
     #[serde(rename = "tiledversion")]
     pub tiled_version:     String,
     #[serde(rename = "tileheight")]
-    pub tile_height:       i64,
+    pub tile_height:       i32,
     #[serde(rename = "tileoffset")]
     #[serde(default = "utils::make_none_option")]
     pub tile_offset:       Option<TileOffset>,
     #[serde(default = "utils::make_none_option")]
     pub tiles:             Option<Vec<Tile>>,
     #[serde(rename = "tilewidth")]
-    pub tile_width:        i64,
+    pub tile_width:        i32,
     #[serde(with = "opt_color_serde")]
     #[serde(rename = "transparentcolor")]
     #[serde(default = "utils::make_none_option")]
@@ -78,7 +78,7 @@ pub struct Tileset {
 #[serde(rename_all = "lowercase")]
 pub struct TilesetRef {
     #[serde(rename = "firstgid")]
-    pub first_gid: i64,
+    pub first_gid: i32,
     pub source:    PathBuf,
 }
 

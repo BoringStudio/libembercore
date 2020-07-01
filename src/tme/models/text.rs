@@ -4,10 +4,12 @@ use serde::Serialize;
 use crate::tme::color::color_serde;
 use crate::tme::color::Color;
 
+use super::utils;
+
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub struct Text {
-    #[serde(default = "default_false")]
+    #[serde(default = "utils::make_false")]
     pub bold:        bool,
     #[serde(with = "color_serde")]
     #[serde(default = "Color::new_black")]
@@ -18,23 +20,23 @@ pub struct Text {
     #[serde(rename = "halign")]
     #[serde(default = "HorizontalAlign::default")]
     pub h_align:     HorizontalAlign,
-    #[serde(default = "default_false")]
+    #[serde(default = "utils::make_false")]
     pub italic:      bool,
-    #[serde(default = "default_true")]
+    #[serde(default = "utils::make_true")]
     pub kerning:     bool,
     #[serde(rename = "pixelsize")]
     #[serde(default = "default_pixel_size")]
     pub pixel_size:  i32,
     #[serde(rename = "strikeout")]
-    #[serde(default = "default_false")]
+    #[serde(default = "utils::make_false")]
     pub strike_out:  bool,
     pub text:        String,
-    #[serde(default = "default_false")]
+    #[serde(default = "utils::make_false")]
     pub underline:   bool,
     #[serde(rename = "valign")]
     #[serde(default = "VerticalAlign::default")]
     pub v_align:     VerticalAlign,
-    #[serde(default = "default_false")]
+    #[serde(default = "utils::make_false")]
     pub wrap:        bool,
 }
 
@@ -73,14 +75,6 @@ fn default_font_family() -> String {
 
 fn default_pixel_size() -> i32 {
     16
-}
-
-fn default_true() -> bool {
-    true
-}
-
-fn default_false() -> bool {
-    false
 }
 
 #[cfg(test)]
@@ -214,18 +208,18 @@ mod tests {
                 wrap:        true,
             },
             Text {
-                bold:        default_false(),
+                bold:        false,
                 color:       Color::new_black(),
                 font_family: default_font_family(),
                 h_align:     HorizontalAlign::default(),
-                italic:      default_false(),
-                kerning:     default_true(),
+                italic:      false,
+                kerning:     true,
                 pixel_size:  default_pixel_size(),
-                strike_out:  default_false(),
+                strike_out:  false,
                 text:        "somebody".to_string(),
-                underline:   default_false(),
+                underline:   false,
                 v_align:     VerticalAlign::default(),
-                wrap:        default_false(),
+                wrap:        false,
             },
         ];
 
@@ -380,18 +374,18 @@ mod tests {
                 wrap:        true,
             },
             Text {
-                bold:        default_false(),
+                bold:        false,
                 color:       Color::new_black(),
                 font_family: default_font_family(),
                 h_align:     HorizontalAlign::default(),
-                italic:      default_false(),
-                kerning:     default_true(),
+                italic:      false,
+                kerning:     true,
                 pixel_size:  default_pixel_size(),
-                strike_out:  default_false(),
+                strike_out:  false,
                 text:        "somebody".to_string(),
-                underline:   default_false(),
+                underline:   false,
                 v_align:     VerticalAlign::default(),
-                wrap:        default_false(),
+                wrap:        false,
             },
         ]
         .into_iter()

@@ -8,7 +8,7 @@ use crate::tme::color::Color;
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub struct ImageLayer {
-    pub id:                i64,
+    pub id:                i32,
     pub image:             String,
     pub name:              String,
     #[serde(rename = "offsetx")]
@@ -18,15 +18,15 @@ pub struct ImageLayer {
     pub opacity:           f64,
     pub properties:        Option<Vec<Property>>,
     #[serde(rename = "startx")]
-    pub start_x:           Option<i64>,
+    pub start_x:           Option<i32>,
     #[serde(rename = "starty")]
-    pub start_y:           Option<i64>,
+    pub start_y:           Option<i32>,
     #[serde(with = "opt_color_serde")]
     #[serde(rename = "transparentcolor")]
     pub transparent_color: Option<Color>,
     pub visible:           bool,
-    pub x:                 i64,
-    pub y:                 i64,
+    pub x:                 i32,
+    pub y:                 i32,
 }
 
 #[cfg(test)]

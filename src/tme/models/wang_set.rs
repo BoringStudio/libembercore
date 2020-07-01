@@ -14,7 +14,7 @@ pub struct WangSet {
     pub edge_colors:   Vec<WangColor>,
     pub name:          String,
     pub properties:    Option<Vec<Property>>,
-    pub tile:          i64,
+    pub tile:          i32,
     #[serde(rename = "wangtiles")]
     pub wang_tiles:    Vec<WangTile>,
 }

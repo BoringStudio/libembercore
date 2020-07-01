@@ -27,7 +27,7 @@ pub enum Error {
     #[error("Invalid data source format: {0}")]
     InvalidDataSourceFormat(String),
     #[error("Unable convert slice of u8 to primitive type, because: {0}")]
-    ConvertU8SliceToPrimitive(String),
+    ConvertBytesToPrimitive(String),
     #[error(transparent)]
     DecodeBase64(#[from] base64::DecodeError),
     #[error(transparent)]

@@ -8,6 +8,8 @@ use std::str::FromStr;
 use crate::tme::error::Error;
 use crate::tme::models::layer::Compression;
 
+use super::utils;
+
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(untagged)]
 pub enum DataSource {
@@ -63,6 +65,7 @@ fn decompress(buf: &[u8], compression: Compression) -> Result<Vec<i32>, Error> {
             let decoder = flate2::read::GzDecoder::new(buf);
             decompress_with_decoder(decoder)
         }
+        Compression::None => utils::le_bytes_to_vec(buf),
     }
 }
 
@@ -70,23 +73,7 @@ fn decompress_with_decoder<T: Read>(mut decoder: T) -> Result<Vec<i32>, Error> {
     let mut buf = Vec::new();
     let _ = decoder.read_to_end(&mut buf);
 
-    let len = buf.len();
-    let element_size = std::mem::size_of::<i32>();
-
-    if len % element_size != 0 {
-        return Error::ConvertU8SliceToPrimitive(
-            "source u8 slice length not multiple of i32 size (4)".to_owned(),
-        )
-        .fail();
-    }
-
-    let result = buf
-        .chunks(element_size)
-        .into_iter()
-        .map(|chunk| i32::from_le_bytes(chunk.try_into().unwrap()))
-        .collect();
-
-    Ok(result)
+    utils::le_bytes_to_vec(&buf[..])
 }
 
 impl FromStr for DataSource {

@@ -14,34 +14,34 @@ use crate::tme::color::Color;
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub struct OrthogonalMap {
-    #[serde(with = "opt_color_serde")]
     #[serde(rename = "backgroundcolor")]
-    pub background_color:  Option<Color>,
+    #[serde(default = "Color::new_transparent")]
+    pub background_color:  Color,
     #[serde(rename = "compressionlevel")]
-    pub compression_level: i64,
-    pub height:            i64,
+    pub compression_level: i32,
+    pub height:            i32,
     pub infinite:          bool,
     pub layers:            Vec<Layer>,
     #[serde(rename = "nextlayerid")]
-    pub next_layer_id:     i64,
+    pub next_layer_id:     i32,
     #[serde(rename = "nextobjectid")]
-    pub next_object_id:    i64,
+    pub next_object_id:    i32,
     pub properties:        Option<Vec<Property>>,
     #[serde(rename = "renderorder")]
     pub render_order:      RenderOrder,
     #[serde(rename = "tiledversion")]
     pub tiled_version:     String,
     #[serde(rename = "tileheight")]
-    pub tile_height:       i64,
+    pub tile_height:       i32,
     #[serde(rename = "tilesets")]
     pub tile_sets:         Vec<TilesetContainer>,
     #[serde(rename = "tilewidth")]
-    pub tile_width:        i64,
+    pub tile_width:        i32,
     #[serde(rename = "type")]
     pub map_type:          MapType,
     #[serde(deserialize_with = "utils::deserialize_value_to_string")]
     pub version:           String,
-    pub width:             i64,
+    pub width:             i32,
 }
 
 #[cfg(test)]

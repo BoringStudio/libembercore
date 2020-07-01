@@ -8,7 +8,7 @@ use super::property::Property;
 pub struct Terrain {
     pub name:       String,
     pub properties: Option<Vec<Property>>,
-    pub tile:       i64,
+    pub tile:       i32,
 }
 
 #[cfg(test)]

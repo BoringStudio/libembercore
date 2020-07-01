@@ -28,6 +28,8 @@ pub enum Compression {
     Zstd,
     Zlib,
     Gzip,
+    #[serde(other)]
+    None,
 }
 
 impl FromStr for Compression {
@@ -38,6 +40,7 @@ impl FromStr for Compression {
             "zstd" => Ok(Compression::Zstd),
             "zlib" => Ok(Compression::Zlib),
             "gzip" => Ok(Compression::Gzip),
+            "" => Ok(Compression::None),
             _ => Error::ParseCompression(s.to_owned()).fail(),
         }
     }

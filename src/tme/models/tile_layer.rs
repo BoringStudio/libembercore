@@ -14,8 +14,8 @@ pub struct TileLayer {
     pub compression: Option<Compression>,
     pub data:        DataSource,
     pub encoding:    Option<Encoding>,
-    pub height:      i64,
-    pub id:          i64,
+    pub height:      i32,
+    pub id:          i32,
     pub name:        String,
     #[serde(rename = "offsetx")]
     pub offset_x:    Option<f64>,
@@ -24,13 +24,13 @@ pub struct TileLayer {
     pub opacity:     f64,
     pub properties:  Option<Vec<Property>>,
     #[serde(rename = "startx")]
-    pub start_x:     Option<i64>,
+    pub start_x:     Option<i32>,
     #[serde(rename = "starty")]
-    pub start_y:     Option<i64>,
+    pub start_y:     Option<i32>,
     pub visible:     bool,
-    pub width:       i64,
-    pub x:           i64,
-    pub y:           i64,
+    pub width:       i32,
+    pub x:           i32,
+    pub y:           i32,
 }
 
 #[cfg(test)]

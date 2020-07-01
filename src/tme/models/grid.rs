@@ -6,9 +6,9 @@ use super::orientation::Orientation;
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
 pub struct Grid {
-    pub height:      i64,
+    pub height:      i32,
     pub orientation: Orientation,
-    pub width:       i64,
+    pub width:       i32,
 }
 
 #[cfg(test)]

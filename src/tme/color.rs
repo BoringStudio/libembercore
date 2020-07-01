@@ -33,39 +33,27 @@ impl Color {
     }
 
     pub fn new_black() -> Self {
-        Self {
-            a: 255,
-            r: 0,
-            g: 0,
-            b: 0,
-        }
+        Self::with_alpha(255, 0, 0, 0)
+    }
+
+    pub fn new_white() -> Self {
+        Self::with_alpha(255, 255, 255, 255)
     }
 
     pub fn new_red() -> Self {
-        Self {
-            a: 255,
-            r: 255,
-            g: 0,
-            b: 0,
-        }
+        Self::with_alpha(255, 255, 0, 0)
     }
 
     pub fn new_green() -> Self {
-        Self {
-            a: 255,
-            r: 0,
-            g: 255,
-            b: 0,
-        }
+        Self::with_alpha(255, 0, 255, 0)
     }
 
     pub fn new_blue() -> Self {
-        Self {
-            a: 255,
-            r: 0,
-            g: 0,
-            b: 255,
-        }
+        Self::with_alpha(255, 0, 0, 255)
+    }
+
+    pub fn new_transparent() -> Self {
+        Self::with_alpha(0, 0, 0, 0)
     }
 }
 

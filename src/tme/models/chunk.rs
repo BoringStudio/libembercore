@@ -6,10 +6,10 @@ use serde::Serialize;
 #[serde(rename_all = "lowercase")]
 pub struct Chunk {
     pub data:   DataSource,
-    pub height: i64,
-    pub width:  i64,
-    pub x:      i64,
-    pub y:      i64,
+    pub height: i32,
+    pub width:  i32,
+    pub x:      i32,
+    pub y:      i32,
 }
 
 #[cfg(test)]

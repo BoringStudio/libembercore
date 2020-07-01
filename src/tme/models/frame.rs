@@ -6,7 +6,7 @@ use serde::Serialize;
 pub struct Frame {
     pub duration: i64,
     #[serde(rename = "tiledid")]
-    pub tiled_id: i64,
+    pub tiled_id: i32,
 }
 
 #[cfg(test)]

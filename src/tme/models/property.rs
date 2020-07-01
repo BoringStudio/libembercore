@@ -20,7 +20,7 @@ pub enum Property {
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct IntProperty {
     pub name:  String,
-    pub value: i64,
+    pub value: i32,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]

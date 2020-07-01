@@ -2,13 +2,14 @@ use serde::Deserialize;
 use serde::Serialize;
 
 use super::object::Object;
+use super::tileset::TilesetRef;
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub struct ObjectTemplate {
     #[serde(rename = "type")]
     pub obj_temp_type: ObjectTemplateType,
-    pub tileset:       Option<ExternalTileset>,
+    pub tileset:       Option<TilesetRef>,
     pub object:        Object,
 }
 
@@ -18,14 +19,6 @@ pub enum ObjectTemplateType {
     Template,
 }
 
-#[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]
-#[serde(rename_all = "lowercase")]
-pub struct ExternalTileset {
-    #[serde(rename = "firstgid")]
-    pub first_gid: i64,
-    pub source:    String,
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -33,6 +26,7 @@ mod tests {
     use crate::tme::models::general_object::GeneralObject;
     use crate::tme::models::point_object::PointObject;
     use serde_json::json;
+    use std::path::PathBuf;
 
     #[test]
     fn deserialize_object_template() {
@@ -102,9 +96,9 @@ mod tests {
             },
             ObjectTemplate {
                 obj_temp_type: ObjectTemplateType::Template,
-                tileset:       Some(ExternalTileset {
+                tileset:       Some(TilesetRef {
                     first_gid: 777,
-                    source:    "/dev/null".to_string(),
+                    source:    PathBuf::from("/dev/null"),
                 }),
                 object:        Object::General(GeneralObject {
                     gid:        777,
@@ -200,9 +194,9 @@ mod tests {
             },
             ObjectTemplate {
                 obj_temp_type: ObjectTemplateType::Template,
-                tileset:       Some(ExternalTileset {
+                tileset:       Some(TilesetRef {
                     first_gid: 777,
-                    source:    "/dev/null".to_string(),
+                    source:    PathBuf::from("/dev/null"),
                 }),
                 object:        Object::General(GeneralObject {
                     gid:        777,
