@@ -1,7 +1,6 @@
 use serde::Deserialize;
 use serde::Serialize;
 
-use std::convert::TryInto;
 use std::io::Read;
 use std::str::FromStr;
 
@@ -18,6 +17,18 @@ pub enum DataSource {
 }
 
 impl DataSource {
+    pub fn get_tiles(&self, compression: Option<Compression>) -> Result<Vec<i32>, Error> {
+        match (&self, compression) {
+            (DataSource::Raw(tiles), _) => Ok(tiles.clone()),
+            (DataSource::Encoded(data), None) => bytemuck::try_cast_slice(&decode_base64(data)?)
+                .map(<[_]>::to_vec)
+                .map_err(Error::TypesCastError),
+            (DataSource::Encoded(data), Some(compression)) => {
+                decompress(decode_base64(data)?.as_slice(), compression)
+            }
+        }
+    }
+
     pub fn decode(self) -> Result<Vec<u8>, Error> {
         match &self {
             DataSource::Raw(_) => Error::InvalidDataSourceFormat(
@@ -39,7 +50,7 @@ impl DataSource {
             .fail(),
             DataSource::Encoded(s) => {
                 let buf = decode_base64(s)?;
-                let res = decompress(&buf[..], compression)?;
+                let res = decompress(&buf, compression)?;
                 Ok(res)
             }
         }
@@ -65,7 +76,9 @@ fn decompress(buf: &[u8], compression: Compression) -> Result<Vec<i32>, Error> {
             let decoder = flate2::read::GzDecoder::new(buf);
             decompress_with_decoder(decoder)
         }
-        Compression::None => utils::le_bytes_to_vec(buf),
+        Compression::None => bytemuck::try_cast_slice(buf)
+            .map(<[_]>::to_vec)
+            .map_err(Error::TypesCastError),
     }
 }
 
@@ -73,7 +86,9 @@ fn decompress_with_decoder<T: Read>(mut decoder: T) -> Result<Vec<i32>, Error> {
     let mut buf = Vec::new();
     let _ = decoder.read_to_end(&mut buf);
 
-    utils::le_bytes_to_vec(&buf[..])
+    bytemuck::try_cast_slice(&buf)
+        .map(<[_]>::to_vec)
+        .map_err(Error::TypesCastError)
 }
 
 impl FromStr for DataSource {
@@ -155,6 +170,33 @@ mod tests {
         for (actual, expected) in actuals.into_iter().zip(expecteds) {
             assert_eq!(actual, expected);
         }
+    }
+
+    #[test]
+    fn decodes_into_tiles() {
+        assert_eq!(DataSource::Raw(vec![2]).get_tiles(None).unwrap(), vec![2]);
+
+        // Raw data source should ignore compression if specified
+        assert_eq!(
+            DataSource::Raw(vec![2])
+                .get_tiles(Some(Compression::Zlib))
+                .unwrap(),
+            vec![2]
+        );
+
+        assert_eq!(
+            DataSource::Encoded("AgAAAAIAAAA=".to_owned())
+                .get_tiles(None)
+                .unwrap(),
+            vec![2, 2]
+        );
+
+        assert_eq!(
+            DataSource::Encoded("eJxjYmBgAAAADAAD".to_owned())
+                .get_tiles(Some(Compression::Zlib))
+                .unwrap(),
+            vec![2]
+        );
     }
 
     #[test]

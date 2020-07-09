@@ -28,6 +28,8 @@ pub enum Error {
     InvalidDataSourceFormat(String),
     #[error("Unable convert slice of u8 to primitive type, because: {0}")]
     ConvertBytesToPrimitive(String),
+    #[error("Unable convert slice of u8 to slice of another type: {0:?}")]
+    TypesCastError(bytemuck::PodCastError),
     #[error(transparent)]
     DecodeBase64(#[from] base64::DecodeError),
     #[error(transparent)]
