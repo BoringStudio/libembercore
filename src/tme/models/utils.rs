@@ -57,6 +57,10 @@ where
     Ok(result)
 }
 
+pub fn make_i32_zero() -> i32 {
+    0
+}
+
 pub fn make_true() -> bool {
     true
 }

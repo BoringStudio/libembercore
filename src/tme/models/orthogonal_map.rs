@@ -8,11 +8,13 @@ use super::property::Property;
 use super::tileset::TilesetContainer;
 use super::utils;
 
+use crate::tme::color::color_serde;
 use crate::tme::color::Color;
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub struct OrthogonalMap {
+    #[serde(with = "color_serde")]
     #[serde(rename = "backgroundcolor")]
     #[serde(default = "Color::new_transparent")]
     pub background_color: Color,
@@ -62,7 +64,6 @@ mod tests {
         let actuals: Vec<OrthogonalMap> = serde_json::from_value(json! {
             [
                 {
-                    "backgroundcolor":  null,
                     "compressionlevel": -1,
                     "height":           77,
                     "infinite":         true,
@@ -80,7 +81,6 @@ mod tests {
                     "width":            77
                 },
                 {
-                    "backgroundcolor":  null,
                     "compressionlevel": -1,
                     "height":           77,
                     "infinite":         true,
@@ -183,7 +183,7 @@ mod tests {
 
         let expecteds: Vec<OrthogonalMap> = vec![
             OrthogonalMap {
-                background_color: Color::new_transparent(),
+                background_color:  Color::new_transparent(),
                 compression_level: -1,
                 height: 77,
                 infinite: true,
@@ -201,7 +201,7 @@ mod tests {
                 width: 77,
             },
             OrthogonalMap {
-                background_color: Color::new_transparent(),
+                background_color:  Color::new_transparent(),
                 compression_level: -1,
                 height: 77,
                 infinite: true,
@@ -310,7 +310,7 @@ mod tests {
         let expecteds: Vec<String> = vec![
             json! {
                 {
-                    "backgroundcolor":  null,
+                    "backgroundcolor":  "#00000000",
                     "compressionlevel": -1,
                     "height":           77,
                     "infinite":         true,
@@ -330,7 +330,7 @@ mod tests {
             },
             json! {
                 {
-                    "backgroundcolor":  null,
+                    "backgroundcolor":  "#00000000",
                     "compressionlevel": -1,
                     "height":           77,
                     "infinite":         true,
@@ -435,7 +435,7 @@ mod tests {
 
         let actuals: Vec<String> = vec![
             OrthogonalMap {
-                background_color: Color::new_transparent(),
+                background_color:  Color::new_transparent(),
                 compression_level: -1,
                 height: 77,
                 infinite: true,
@@ -453,7 +453,7 @@ mod tests {
                 width: 77,
             },
             OrthogonalMap {
-                background_color: Color::new_transparent(),
+                background_color:  Color::new_transparent(),
                 compression_level: -1,
                 height: 77,
                 infinite: true,

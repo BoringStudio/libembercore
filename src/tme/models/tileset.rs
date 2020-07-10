@@ -11,6 +11,7 @@ use super::tile_offset::TileOffset;
 use super::utils;
 use super::wang_set::WangSet;
 
+use crate::tme::color::color_serde;
 use crate::tme::color::opt_color_serde;
 use crate::tme::color::Color;
 
@@ -24,12 +25,11 @@ pub enum TilesetContainer {
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub struct Tileset {
-    #[serde(with = "opt_color_serde")]
+    #[serde(with = "color_serde")]
     #[serde(rename = "backgroundcolor")]
-    #[serde(default = "utils::make_none_option")]
-    pub background_color:  Option<Color>,
-    #[serde(default = "utils::make_none_option")]
-    pub columns:           Option<i32>,
+    #[serde(default = "Color::new_transparent")]
+    pub background_color:  Color,
+    pub columns:           usize,
     #[serde(default = "utils::make_none_option")]
     pub grid:              Option<Grid>,
     #[serde(default = "utils::make_none_option")]
@@ -40,8 +40,8 @@ pub struct Tileset {
     #[serde(rename = "imagewidth")]
     #[serde(default = "utils::make_none_option")]
     pub image_width:       Option<i32>,
-    #[serde(default = "utils::make_none_option")]
-    pub margin:            Option<i32>,
+    #[serde(default = "utils::make_i32_zero")]
+    pub margin:            i32,
     pub name:              String,
     #[serde(default = "utils::make_none_option")]
     pub properties:        Option<Vec<Property>>,
@@ -93,13 +93,11 @@ mod tests {
         let actuals: Vec<Tileset> = serde_json::from_value(json! {
             [
                 {
-                    "backgroundcolor":  null,
-                    "columns":          null,
+                    "columns":          5,
                     "grid":             null,
                     "image":            null,
                     "imageheight":      null,
                     "imagewidth":       null,
-                    "margin":           null,
                     "name":             "",
                     "properties":       null,
                     "spacing":          0,
@@ -120,13 +118,13 @@ mod tests {
         .unwrap();
 
         let expecteds: Vec<Tileset> = vec![Tileset {
-            background_color:  None,
-            columns:           None,
+            background_color:  Color::new_transparent(),
+            columns:           5,
             grid:              None,
             image:             None,
             image_height:      None,
             image_width:       None,
-            margin:            None,
+            margin:            0,
             name:              "".to_string(),
             properties:        None,
             spacing:           0,
@@ -152,13 +150,13 @@ mod tests {
     fn serialize_tileset() {
         let expecteds: Vec<String> = vec![json! {
             {
-                "backgroundcolor":  null,
-                "columns":          null,
+                "backgroundcolor":  "#00000000",
+                "columns":          5,
                 "grid":             null,
                 "image":            null,
                 "imageheight":      null,
                 "imagewidth":       null,
-                "margin":           null,
+                "margin":           0,
                 "name":             "",
                 "properties":       null,
                 "spacing":          0,
@@ -180,13 +178,13 @@ mod tests {
         .collect();
 
         let actuals: Vec<String> = vec![Tileset {
-            background_color:  None,
-            columns:           None,
+            background_color:  Color::new_transparent(),
+            columns:           5,
             grid:              None,
             image:             None,
             image_height:      None,
             image_width:       None,
-            margin:            None,
+            margin:            0,
             name:              "".to_string(),
             properties:        None,
             spacing:           0,
