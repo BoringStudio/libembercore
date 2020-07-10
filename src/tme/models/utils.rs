@@ -5,57 +5,9 @@ use serde::de::Visitor;
 use serde::Deserialize;
 use serde::Deserializer;
 
-use std::convert::{TryFrom, TryInto};
 use std::fmt;
 use std::marker::PhantomData;
 use std::str::FromStr;
-
-use crate::tme::Error;
-
-pub trait EndianRead {
-    type Array;
-    fn from_le_bytes(bytes: Self::Array) -> Self;
-    fn from_be_bytes(bytes: Self::Array) -> Self;
-}
-
-macro_rules! impl_endian_read (( $($int:ident),* ) => {
-    $(
-        impl EndianRead for $int {
-            type Array = [u8; std::mem::size_of::<Self>()];
-            fn from_le_bytes(bytes: Self::Array) -> Self { Self::from_le_bytes(bytes) }
-            fn from_be_bytes(bytes: Self::Array) -> Self { Self::from_be_bytes(bytes) }
-        }
-    )*
-});
-
-impl_endian_read!(u8, u16, u32, u64, i8, i16, i32, i64, usize, isize);
-
-pub fn le_bytes_to_vec<'a, T>(buf: &'a [u8]) -> Result<Vec<T>, Error>
-where
-    T: EndianRead,
-    T::Array: TryFrom<&'a [u8]>,
-    <T::Array as TryFrom<&'a [u8]>>::Error: fmt::Debug,
-{
-    let len = buf.len();
-    let element_size = std::mem::size_of::<T>();
-
-    if len % element_size != 0 {
-        return Error::ConvertBytesToPrimitive(format!(
-            "source slice length ({}) not multiple of {} size ({})",
-            len,
-            std::any::type_name::<T>(),
-            element_size
-        ))
-        .fail();
-    }
-
-    let result = buf
-        .chunks(element_size)
-        .map(|chunk| T::from_le_bytes(chunk.try_into().unwrap()))
-        .collect();
-
-    Ok(result)
-}
 
 pub fn make_i32_zero() -> i32 {
     0

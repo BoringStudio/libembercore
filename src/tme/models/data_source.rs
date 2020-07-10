@@ -7,8 +7,6 @@ use std::str::FromStr;
 use crate::tme::error::Error;
 use crate::tme::models::layer::Compression;
 
-use super::utils;
-
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(untagged)]
 pub enum DataSource {
@@ -17,7 +15,7 @@ pub enum DataSource {
 }
 
 impl DataSource {
-    pub fn get_tiles(&self, compression: Option<Compression>) -> Result<Vec<i32>, Error> {
+    pub fn extract_tiles(&self, compression: Option<Compression>) -> Result<Vec<i32>, Error> {
         match (&self, compression) {
             (DataSource::Raw(tiles), _) => Ok(tiles.clone()),
             (DataSource::Encoded(data), None) => bytemuck::try_cast_slice(&decode_base64(data)?)
@@ -25,33 +23,6 @@ impl DataSource {
                 .map_err(Error::TypesCastError),
             (DataSource::Encoded(data), Some(compression)) => {
                 decompress(decode_base64(data)?.as_slice(), compression)
-            }
-        }
-    }
-
-    pub fn decode(self) -> Result<Vec<u8>, Error> {
-        match &self {
-            DataSource::Raw(_) => Error::InvalidDataSourceFormat(
-                "data presents as raw vector, base64 encoded string expected".to_owned(),
-            )
-            .fail(),
-            DataSource::Encoded(s) => {
-                let res = decode_base64(s)?;
-                Ok(res)
-            }
-        }
-    }
-
-    pub fn decode_and_decompress(self, compression: Compression) -> Result<Vec<i32>, Error> {
-        match &self {
-            DataSource::Raw(_) => Error::InvalidDataSourceFormat(
-                "data presents as raw vector, base64 encoded string expected".to_owned(),
-            )
-            .fail(),
-            DataSource::Encoded(s) => {
-                let buf = decode_base64(s)?;
-                let res = decompress(&buf, compression)?;
-                Ok(res)
             }
         }
     }
@@ -174,64 +145,45 @@ mod tests {
 
     #[test]
     fn decodes_into_tiles() {
-        assert_eq!(DataSource::Raw(vec![2]).get_tiles(None).unwrap(), vec![2]);
+        assert_eq!(
+            DataSource::Raw(vec![2]).extract_tiles(None).unwrap(),
+            vec![2]
+        );
 
         // Raw data source should ignore compression if specified
         assert_eq!(
             DataSource::Raw(vec![2])
-                .get_tiles(Some(Compression::Zlib))
+                .extract_tiles(Some(Compression::Zlib))
                 .unwrap(),
             vec![2]
         );
 
         assert_eq!(
             DataSource::Encoded("AgAAAAIAAAA=".to_owned())
-                .get_tiles(None)
+                .extract_tiles(None)
                 .unwrap(),
             vec![2, 2]
         );
 
         assert_eq!(
             DataSource::Encoded("eJxjYmBgAAAADAAD".to_owned())
-                .get_tiles(Some(Compression::Zlib))
+                .extract_tiles(Some(Compression::Zlib))
                 .unwrap(),
             vec![2]
         );
-    }
 
-    #[test]
-    fn decompress_zlib() {
-        let compression = Compression::Zlib;
-        let base64 = "eJxjYmBgAAAADAAD".to_string();
-        let data = DataSource::Encoded(base64);
+        assert_eq!(
+            DataSource::Encoded("KLUv/SAEIQAAAgAAAA==".to_owned())
+                .extract_tiles(Some(Compression::Zstd))
+                .unwrap(),
+            vec![2]
+        );
 
-        let actual = data.decode_and_decompress(compression).unwrap();
-        let expected = vec![2];
-
-        assert_eq!(actual, expected);
-    }
-
-    #[test]
-    fn decompress_zstd() {
-        let compression = Compression::Zstd;
-        let base64 = "KLUv/SAEIQAAAgAAAA==".to_string();
-        let data = DataSource::Encoded(base64);
-
-        let actual = data.decode_and_decompress(compression).unwrap();
-        let expected = vec![2];
-
-        assert_eq!(actual, expected);
-    }
-
-    #[test]
-    fn decompress_gzip() {
-        let compression = Compression::Gzip;
-        let base64 = "H4sIAAAAAAAACmNiYGAAAJcXTYsEAAAA".to_string();
-        let data = DataSource::Encoded(base64);
-
-        let actual = data.decode_and_decompress(compression).unwrap();
-        let expected = vec![2];
-
-        assert_eq!(actual, expected);
+        assert_eq!(
+            DataSource::Encoded("H4sIAAAAAAAACmNiYGAAAJcXTYsEAAAA".to_owned())
+                .extract_tiles(Some(Compression::Gzip))
+                .unwrap(),
+            vec![2]
+        );
     }
 }
